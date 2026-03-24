@@ -1,0 +1,297 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+main {
+    min-height: 100vh;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr);
+    align-items: stretch;
+    background: #0b0f17;
+    color: #e7ecf3;
+    font-family: "Space Grotesk", "Segoe UI", sans-serif;
+    position: relative;
+    overflow: hidden;
+    padding: 5.25rem 4vw 3rem;
+    gap: 2rem;
+}
+
+.auth-ambient {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(transparent 92%, rgba(255, 255, 255, 0.03) 92%),
+        linear-gradient(90deg, transparent 92%, rgba(255, 255, 255, 0.03) 92%);
+    background-size: 60px 60px;
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.auth-orb {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.5;
+    pointer-events: none;
+    animation: float 16s ease-in-out infinite;
+}
+
+.orb-one {
+    background: rgba(47, 225, 255, 0.45);
+    top: -80px;
+    right: -120px;
+}
+
+.orb-two {
+    background: rgba(255, 77, 141, 0.35);
+    bottom: -140px;
+    left: -120px;
+    animation-delay: -6s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(30px);
+    }
+}
+
+.home-floating {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    padding: 0.5rem 1.2rem;
+    border-radius: 999px;
+    border: 1px solid rgba(36, 48, 74, 0.8);
+    background: rgba(15, 21, 36, 0.9);
+    color: #e7ecf3;
+    font-weight: 600;
+    text-decoration: none;
+    z-index: 10;
+    transition: transform 0.12s ease-in-out;
+}
+
+.auth-brand {
+    position: fixed;
+    top: 1.6rem;
+    right: 2rem;
+    font-size: 2.6rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    z-index: 10;
+    margin-bottom: 20px;
+    display: inline-flex;
+    gap: 0;
+}
+
+.auth-brand span {
+    display: inline-block;
+    transition: color 0.2s ease;
+}
+
+.auth-brand:hover span {
+    animation: brandWave 1.4s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 0.08s);
+}
+
+@keyframes brandWave {
+    0% {
+        color: #f5f7fb;
+    }
+    40% {
+        color: #2fe1ff;
+    }
+    70% {
+        color: #ff4d8d;
+    }
+    100% {
+        color: #f5f7fb;
+    }
+}
+
+.auth-hero {
+    background: #141c2f;
+    border-radius: 24px;
+    border: 1px solid rgba(36, 48, 74, 0.8);
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    box-shadow: 0 20px 60px rgba(5, 10, 20, 0.6);
+    position: relative;
+    z-index: 2;
+    min-height: 520px;
+}
+
+.hero-image {
+    flex: 1;
+    background: radial-gradient(circle at top, rgba(47, 225, 255, 0.25), transparent 60%),
+        url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=80") center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 420px;
+}
+
+.auth-hero {
+    margin-top: 3.5rem;
+}
+
+.hero-badge {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(15, 22, 40, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.hero-overlay {
+    width: 100%;
+    padding: 2.5rem;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(8, 12, 22, 0.2) 0%, rgba(8, 12, 22, 0.85) 70%);
+}
+
+.hero-overlay h1 {
+    font-size: 2.8rem;
+    margin: 0 0 0.75rem;
+}
+
+.hero-overlay p {
+    margin: 0;
+    color: #2fe1ff;
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    animation: fadePulse 3.6s ease-in-out infinite;
+}
+
+@keyframes fadePulse {
+    0%, 100% { opacity: 0.6; transform: translateY(4px); }
+    50% { opacity: 1; transform: translateY(0); }
+}
+
+.auth-form {
+    background: linear-gradient(160deg, rgba(47, 225, 255, 0.15), rgba(255, 77, 141, 0.08));
+    border: 1px solid rgba(47, 225, 255, 0.35);
+    border-radius: 24px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    box-shadow: 0 20px 60px rgba(5, 10, 20, 0.65), 0 0 40px rgba(47, 225, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+    max-width: 360px;
+    width: 100%;
+    margin-top: 2.5rem;
+}
+
+.auth-form::after {
+    content: "";
+    position: absolute;
+    inset: -60px;
+    background: radial-gradient(circle at top, rgba(47, 225, 255, 0.3), transparent 55%);
+    opacity: 0.5;
+    pointer-events: none;
+    animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translateY(0);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translateY(-10px);
+        opacity: 0.8;
+    }
+}
+
+.auth-form h1,
+.auth-form p,
+.auth-form label,
+.auth-form button,
+.auth-form input,
+.auth-form .error-box {
+    position: relative;
+    z-index: 1;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.auth-form .button {
+    width: 100%;
+}
+
+.home-floating:active {
+    transform: scale(0.96);
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    input {
+        border: none;
+        outline: none;
+        padding-inline: 1rem;
+        padding-block: 0.75rem;
+        border-radius: 0.75rem;
+        background: #111726;
+        color: #e7ecf3;
+    }
+}
+
+.error-box {
+    background: rgba(255, 77, 141, 0.1);
+    border: 1px solid rgba(255, 77, 141, 0.4);
+    color: #ffd2e2;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+a {
+    color:#ff4d8d;
+    text-decoration: none;
+}
+
+@media (max-width: 960px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-brand {
+        position: static;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    main {
+        padding: 1.5rem;
+    }
+
+    .hero-overlay h1 {
+        font-size: 1.5rem;
+    }
+}

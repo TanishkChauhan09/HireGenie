@@ -1,0 +1,231 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+.mock-shell {
+    min-height: 100vh;
+    background: #0b0f17;
+    color: #e7ecf3;
+    font-family: "Space Grotesk", "Segoe UI", sans-serif;
+    position: relative;
+    overflow: hidden;
+    padding: 2.5rem 4vw 4rem;
+}
+
+.mock-ambient {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(transparent 92%, rgba(255, 255, 255, 0.03) 92%),
+        linear-gradient(90deg, transparent 92%, rgba(255, 255, 255, 0.03) 92%);
+    background-size: 60px 60px;
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.mock-orb {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.5;
+    pointer-events: none;
+    animation: float 16s ease-in-out infinite;
+}
+
+.orb-one {
+    background: rgba(47, 225, 255, 0.45);
+    top: -80px;
+    right: -120px;
+}
+
+.orb-two {
+    background: rgba(255, 77, 141, 0.35);
+    bottom: -140px;
+    left: -120px;
+    animation-delay: -6s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(30px); }
+}
+
+.home-floating {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    padding: 0.5rem 1.2rem;
+    border-radius: 999px;
+    border: 1px solid rgba(36, 48, 74, 0.8);
+    background: rgba(15, 21, 36, 0.9);
+    color: #e7ecf3;
+    font-weight: 600;
+    text-decoration: none;
+    z-index: 10;
+}
+
+.mock-brand {
+    position: fixed;
+    top: 1.6rem;
+    right: 2rem;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    z-index: 10;
+    display: inline-flex;
+    gap: 0;
+}
+
+.mock-brand span {
+    display: inline-block;
+    transition: color 0.2s ease;
+}
+
+.mock-brand:hover span {
+    animation: brandWave 1.4s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 0.08s);
+}
+
+@keyframes brandWave {
+    0% {
+        color: #f5f7fb;
+    }
+    40% {
+        color: #2fe1ff;
+    }
+    70% {
+        color: #ff4d8d;
+    }
+    100% {
+        color: #f5f7fb;
+    }
+}
+
+.mock-card {
+    margin-top: 4.5rem;
+    background: #141c2f;
+    border-radius: 24px;
+    border: 1px solid rgba(36, 48, 74, 0.8);
+    padding: 2rem;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 2;
+}
+
+.mock-question {
+    margin-top: 1.5rem;
+    padding: 1.2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(36, 48, 74, 0.8);
+    background: rgba(15, 21, 36, 0.9);
+}
+
+.question-label {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: #9aa6b2;
+    margin-bottom: 0.5rem;
+}
+
+.mock-controls {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.mic-debug {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 160px;
+}
+
+.mic-status {
+    font-size: 0.75rem;
+    color: #9aa6b2;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.controls {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.primary-cta {
+    padding: 0.8rem 1.2rem;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, #2fe1ff, #ff4d8d);
+    color: #081019;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.ghost-btn {
+    padding: 0.75rem 1.1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(36, 48, 74, 0.8);
+    background: transparent;
+    color: #e7ecf3;
+    cursor: pointer;
+}
+
+.mock-answer {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.mock-answer textarea {
+    min-height: 140px;
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    background: #0f1524;
+    border: 1px solid rgba(36, 48, 74, 0.8);
+    color: #e7ecf3;
+}
+
+.error-box {
+    background: rgba(255, 77, 141, 0.1);
+    border: 1px solid rgba(255, 77, 141, 0.4);
+    color: #ffd2e2;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+.mock-feedback {
+    margin-top: 2rem;
+}
+
+.score-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.score-grid div {
+    background: rgba(15, 21, 36, 0.9);
+    border: 1px solid rgba(36, 48, 74, 0.8);
+    border-radius: 12px;
+    padding: 0.75rem;
+}
+
+.feedback-block ul {
+    padding-left: 1.2rem;
+}
+
+@media (max-width: 720px) {
+    .mock-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
