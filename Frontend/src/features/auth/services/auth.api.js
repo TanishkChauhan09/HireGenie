@@ -6,6 +6,14 @@ const api = axios.create({
     withCredentials: true
 })
 
+const formatError = (err, fallback) => {
+    const data = err?.response?.data
+    if (Array.isArray(data?.errors) && data.errors.length > 0) {
+        return data.errors.map((e) => e.message).join(", ")
+    }
+    return data?.message || fallback
+}
+
 export async function register({ username, email, password }) {
 
     try {
@@ -16,7 +24,7 @@ export async function register({ username, email, password }) {
         return { data: response.data }
 
     } catch (err) {
-        const message = err?.response?.data?.message || "Registration failed"
+        const message = formatError(err, "Registration failed")
         return { error: message, status: err?.response?.status }
     }
 
@@ -33,7 +41,7 @@ export async function login({ email, password }) {
         return { data: response.data }
 
     } catch (err) {
-        const message = err?.response?.data?.message || "Login failed"
+        const message = formatError(err, "Login failed")
         return { error: message, status: err?.response?.status }
     }
 
@@ -47,7 +55,7 @@ export async function logout() {
         return { data: response.data }
 
     } catch (err) {
-        const message = err?.response?.data?.message || "Logout failed"
+        const message = formatError(err, "Logout failed")
         return { error: message, status: err?.response?.status }
     }
 }
@@ -61,7 +69,7 @@ export async function getMe() {
         return { data: response.data }
 
     } catch (err) {
-        const message = err?.response?.data?.message || "Not authenticated"
+        const message = formatError(err, "Not authenticated")
         return { error: message, status: err?.response?.status }
     }
 

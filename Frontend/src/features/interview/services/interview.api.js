@@ -1,4 +1,5 @@
 import axios from "axios";
+import { waitForJobResultWithFallback } from "./realtime"
 
 const api = axios.create({
     baseURL: "http://localhost:3000",
@@ -40,9 +41,34 @@ export const getInterviewReportById = async (interviewId) => {
 /**
  * @description Service to get all interview reports of logged in user.
  */
-export const getAllInterviewReports = async () => {
-    const response = await api.get("/api/interview/")
+export const getAllInterviewReports = async ({ page = 1, limit = 10 } = {}) => {
+    const response = await api.get("/api/interview/", {
+        params: { page, limit }
+    })
 
+    return response.data
+}
+
+
+const pollResumeJob = async (jobId, timeoutMs = 30000) => {
+    const start = Date.now()
+    while (Date.now() - start < timeoutMs) {
+        const statusRes = await api.get(`/api/interview/resume/pdf/status/${jobId}`)
+        if (statusRes.data?.status === "completed") {
+            return statusRes.data
+        }
+        if (statusRes.data?.status === "failed") {
+            throw new Error(statusRes.data?.error || "Resume job failed.")
+        }
+        await new Promise((resolve) => setTimeout(resolve, 2000))
+    }
+    throw new Error("Resume generation timed out. Please try again.")
+}
+
+const downloadResumePdf = async (jobId) => {
+    const response = await api.get(`/api/interview/resume/pdf/download/${jobId}`, {
+        responseType: "blob"
+    })
     return response.data
 }
 
@@ -51,9 +77,12 @@ export const getAllInterviewReports = async () => {
  * @description Service to generate resume pdf based on user self description, resume content and job description.
  */
 export const generateResumePdf = async ({ interviewReportId }) => {
-    const response = await api.post(`/api/interview/resume/pdf/${interviewReportId}`, null, {
-        responseType: "blob"
-    })
+    const response = await api.post(`/api/interview/resume/pdf/${interviewReportId}`)
+
+    if (response.data?.jobId) {
+        await waitForJobResultWithFallback(response.data.jobId, pollResumeJob, 45000)
+        return await downloadResumePdf(response.data.jobId)
+    }
 
     return response.data
 }

@@ -107,7 +107,7 @@
     border-radius: 24px;
     border: 1px solid rgba(36, 48, 74, 0.8);
     padding: 2rem;
-    max-width: 900px;
+    max-width: 980px;
     margin-left: auto;
     margin-right: auto;
     position: relative;
@@ -122,6 +122,26 @@
     background: rgba(15, 21, 36, 0.9);
 }
 
+.question-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.question-hint {
+    font-size: 0.8rem;
+    color: #9aa6b2;
+}
+
+.ai-processing {
+    margin-top: 0.6rem;
+    font-size: 0.8rem;
+    color: #2fe1ff;
+    letter-spacing: 0.04em;
+}
+
 .question-label {
     text-transform: uppercase;
     font-size: 0.7rem;
@@ -132,29 +152,78 @@
 
 .mock-controls {
     margin-top: 1.5rem;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    justify-content: space-between;
     gap: 1rem;
+}
+
+.timer {
+    font-weight: 600;
+    letter-spacing: 0.04em;
 }
 
 .mic-debug {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
-    min-width: 160px;
+    min-width: 170px;
+    align-items: flex-end;
+}
+
+.record-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border: 1px solid rgba(36, 48, 74, 0.8);
+    background: rgba(15, 21, 36, 0.8);
+}
+
+.record-pill .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #9aa6b2;
+}
+
+.record-pill.live {
+    color: #2fe1ff;
+    border-color: rgba(47, 225, 255, 0.4);
+    box-shadow: 0 0 12px rgba(47, 225, 255, 0.3);
+}
+
+.record-pill.live .dot {
+    background: #2fe1ff;
+    box-shadow: 0 0 8px rgba(47, 225, 255, 0.8);
+    animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.4); opacity: 1; }
 }
 
 .mic-status {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: #9aa6b2;
     text-transform: uppercase;
     letter-spacing: 0.12em;
 }
 
+.mic-hint {
+    font-size: 0.75rem;
+    color: #7f8aa3;
+}
+
 .controls {
     display: flex;
     gap: 0.75rem;
+    justify-content: center;
 }
 
 .primary-cta {
@@ -176,6 +245,12 @@
     cursor: pointer;
 }
 
+.ghost-btn.small {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
+    border-radius: 999px;
+}
+
 .mock-answer {
     margin-top: 1.5rem;
     display: flex;
@@ -183,8 +258,14 @@
     gap: 0.75rem;
 }
 
+.answer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .mock-answer textarea {
-    min-height: 140px;
+    min-height: 180px;
     border-radius: 12px;
     padding: 0.85rem 1rem;
     background: #0f1524;
@@ -221,6 +302,21 @@
 
 .feedback-block ul {
     padding-left: 1.2rem;
+}
+
+@media (max-width: 860px) {
+    .mock-controls {
+        grid-template-columns: 1fr;
+        align-items: flex-start;
+    }
+
+    .controls {
+        justify-content: flex-start;
+    }
+
+    .mic-debug {
+        align-items: flex-start;
+    }
 }
 
 @media (max-width: 720px) {

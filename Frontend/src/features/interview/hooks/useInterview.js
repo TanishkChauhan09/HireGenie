@@ -13,7 +13,16 @@ export const useInterview = () => {
         throw new Error("useInterview must be used within an InterviewProvider")
     }
 
-    const { loading, setLoading, report, setReport, reports, setReports } = context
+    const {
+        loading,
+        setLoading,
+        report,
+        setReport,
+        reports,
+        setReports,
+        mockContext,
+        setMockContext
+    } = context
 
     const generateReport = async ({ jobDescription, selfDescription, resumeFile }) => {
         setLoading(true)
@@ -22,6 +31,10 @@ export const useInterview = () => {
             response = await generateInterviewReport({ jobDescription, selfDescription, resumeFile })
             if (response?.interviewReport) {
                 setReport(response.interviewReport)
+                setMockContext({
+                    jobDescription: response.interviewReport.jobDescription || jobDescription,
+                    skillGaps: response.interviewReport.skillGaps || []
+                })
             }
         } catch (error) {
             console.log(error)
@@ -44,6 +57,10 @@ export const useInterview = () => {
         try {
             response = await getInterviewReportById(interviewId)
             setReport(response.interviewReport)
+            setMockContext({
+                jobDescription: response.interviewReport?.jobDescription || "",
+                skillGaps: response.interviewReport?.skillGaps || []
+            })
         } catch (error) {
             console.log(error)
         } finally {
@@ -52,11 +69,11 @@ export const useInterview = () => {
         return response.interviewReport
     }
 
-    const getReports = async () => {
+    const getReports = async (page = 1, limit = 10) => {
         setLoading(true)
         let response = null
         try {
-            response = await getAllInterviewReports()
+            response = await getAllInterviewReports({ page, limit })
             setReports(response.interviewReports)
         } catch (error) {
             console.log(error)
@@ -94,6 +111,6 @@ export const useInterview = () => {
         }
     }, [ interviewId ])
 
-    return { loading, report, reports, generateReport, getReportById, getReports, getResumePdf }
+    return { loading, report, reports, generateReport, getReportById, getReports, getResumePdf, mockContext }
 
 }

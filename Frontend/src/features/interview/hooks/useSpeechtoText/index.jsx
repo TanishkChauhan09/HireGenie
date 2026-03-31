@@ -69,7 +69,7 @@ const useSpeechToText = (options = {}) => {
                 return
             }
             if (event.error === "no-speech") {
-                setError("No speech detected. Keep speaking â€” listening will continue.")
+                setError("No speech detected. Keep speaking — listening will continue.")
                 if (shouldListenRef.current) {
                     clearTimeout(restartTimeoutRef.current)
                     restartTimeoutRef.current = setTimeout(() => {
@@ -114,14 +114,16 @@ const useSpeechToText = (options = {}) => {
         }
     }, [ options.lang, options.interimResults, options.continuous ])
 
-    const startListening = () => {
+    const startListening = ({ appendText = "" } = {}) => {
         const recognition = recognitionRef.current
         if (!recognition) {
             setError("Speech recognition works only in Chrome. Please use Chrome.")
             return
         }
         setError("")
-        finalTranscriptRef.current = ""
+        const initial = appendText.trim()
+        finalTranscriptRef.current = initial ? `${initial} ` : ""
+        setTranscript(initial)
         shouldListenRef.current = true
         try {
             recognition.start()
@@ -148,6 +150,11 @@ const useSpeechToText = (options = {}) => {
         }
     }
 
+    const resetTranscript = () => {
+        finalTranscriptRef.current = ""
+        setTranscript("")
+    }
+
     return {
         isListening,
         transcript,
@@ -155,6 +162,7 @@ const useSpeechToText = (options = {}) => {
         error,
         startListening,
         stopListening,
+        resetTranscript,
         supported: !!getSpeechRecognition(),
     }
 }

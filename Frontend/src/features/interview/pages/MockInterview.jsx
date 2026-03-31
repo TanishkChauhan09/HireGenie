@@ -3,6 +3,22 @@ import { Link } from "react-router"
 import "./mock.scss"
 import { evaluateMockAnswer, getMockQuestion } from "../services/mock.api"
 import useSpeechToText from "../hooks/useSpeechtoText"
+import { useInterview } from "../hooks/useInterview"
+
+const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`
+}
+
+const pickFocusFromGaps = (skillGaps) => {
+    if (!Array.isArray(skillGaps) || skillGaps.length === 0) return ""
+    const high = skillGaps.filter((gap) => gap.severity === "high")
+    const medium = skillGaps.filter((gap) => gap.severity === "medium")
+    const pool = high.length ? high : (medium.length ? medium : skillGaps)
+    const choice = pool[Math.floor(Math.random() * pool.length)]
+    return choice?.skill || ""
+}
 
 const MockInterview = () => {
     const [ question, setQuestion ] = useState("")
@@ -13,6 +29,7 @@ const MockInterview = () => {
     const [ error, setError ] = useState("")
 
     const feedbackRef = useRef(null)
+    const { mockContext } = useInterview()
 
     const {
         isListening,
@@ -21,6 +38,7 @@ const MockInterview = () => {
         error: speechError,
         startListening,
         stopListening,
+        resetTranscript,
         supported,
     } = useSpeechToText({ continuous: true, interimResults: true, lang: "en-US" })
 
@@ -38,10 +56,17 @@ const MockInterview = () => {
         setError("")
         setLoading(true)
         try {
-            const data = await getMockQuestion({})
+            const focus = pickFocusFromGaps(mockContext?.skillGaps)
+            const data = await getMockQuestion({
+                refresh: true,
+                jobDescription: mockContext?.jobDescription || "",
+                focus
+            })
             setQuestion(data.question)
             setFeedback(null)
             setAnswer("")
+            resetTranscript()
+            setTimer(0)
         } catch (err) {
             setError("Failed to get a question. Please try again.")
         } finally {
@@ -51,7 +76,7 @@ const MockInterview = () => {
 
     useEffect(() => {
         fetchQuestion()
-    }, [])
+    }, [ mockContext?.jobDescription ])
 
     const startRecording = () => {
         if (!canRecord) {
@@ -60,7 +85,7 @@ const MockInterview = () => {
         }
         setError("")
         setTimer(0)
-        startListening()
+        startListening({ appendText: answer })
     }
 
     const stopRecording = () => {
@@ -75,13 +100,22 @@ const MockInterview = () => {
         }
         setLoading(true)
         try {
-            const data = await evaluateMockAnswer({ question, answer })
+            const data = await evaluateMockAnswer({
+                question,
+                answer,
+                jobDescription: mockContext?.jobDescription || ""
+            })
             setFeedback(data.evaluation)
         } catch (err) {
             setError("Failed to evaluate. Please try again.")
         } finally {
             setLoading(false)
         }
+    }
+
+    const handleClear = () => {
+        setAnswer("")
+        resetTranscript()
     }
 
     useEffect(() => {
@@ -126,35 +160,53 @@ const MockInterview = () => {
                 <section className='mock-question'>
                     <div className='question-label'>Question</div>
                     <p>{question || "Loading question..."}</p>
-                    <button onClick={fetchQuestion} className='ghost-btn' disabled={loading}>
-                        New Question
-                    </button>
+                    <div className='question-actions'>
+                        <button onClick={fetchQuestion} className='ghost-btn' disabled={loading}>
+                            {loading ? "Processing..." : "New Question"}
+                        </button>
+                        <span className='question-hint'>Focus: {pickFocusFromGaps(mockContext?.skillGaps) || "General"}</span>
+                    </div>
+                    {loading && (
+                        <div className='ai-processing'>AI is processing. Please wait...</div>
+                    )}
                 </section>
 
                 <section className='mock-controls'>
-                    <div className='timer'>? {timer}s</div>
+                    <div className='timer'>? {formatTime(timer)}</div>
                     <div className='controls'>
                         <button className='primary-cta' onClick={startRecording} disabled={isListening || loading}>
-                            Start Recording 
+                            {isListening ? "Recording..." : "Start Recording"}
                         </button>
                         <button className='ghost-btn' onClick={stopRecording} disabled={!isListening}>
                             Stop Recording
                         </button>
                     </div>
                     <div className='mic-debug'>
+                        <div className={`record-pill ${isListening ? "live" : "idle"}`}>
+                            <span className='dot' />
+                            {isListening ? "Live" : "Paused"}
+                        </div>
                         <span className='mic-status'>Speech: {speechStatus}</span>
+                        <span className='mic-hint'>Start again to append to your answer.</span>
                     </div>
                 </section>
 
                 <section className='mock-answer'>
-                    <label>Your Answer</label>
+                    <div className='answer-head'>
+                        <label>Your Answer</label>
+                        <div className='answer-actions'>
+                            <button className='ghost-btn small' onClick={handleClear} type='button'>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
                     <textarea
                         value={answer}
                         onChange={(e) => setAnswer(e.target.value)}
                         placeholder='Type or record your answer...'
                     />
                     <button className='primary-cta' onClick={handleEvaluate} disabled={loading}>
-                        Submit for Evaluation
+                        {loading ? "Processing..." : "Submit for Evaluation"}
                     </button>
                     {error && <div className='error-box'>{error}</div>}
                 </section>

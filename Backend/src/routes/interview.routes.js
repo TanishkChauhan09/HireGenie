@@ -1,7 +1,8 @@
 const express = require("express")
-const authMiddleware = require("../middlewares/auth.middleware")
 const interviewController = require("../models/interview.controller")
 const upload = require("../middlewares/file.middleware")
+const { validate } = require("../middlewares/validate")
+const { createInterviewBody, interviewIdParams, resumePdfParams, resumeJobParams, paginationQuery } = require("../validators/interview.schemas")
 
 const interviewRouter = express.Router()
 
@@ -12,14 +13,14 @@ const interviewRouter = express.Router()
  * @description generate new interview report on the basis of user self description,resume pdf and job description.
  * @access private
  */
-interviewRouter.post("/", authMiddleware.authUser, upload.single("resume"), interviewController.generateInterViewReportController)
+interviewRouter.post("/", upload.single("resume"), validate({ body: createInterviewBody }), interviewController.generateInterViewReportController)
 
 /**
  * @route GET /api/interview/report/:interviewId
  * @description get interview report by interviewId.
  * @access private
  */
-interviewRouter.get("/report/:interviewId", authMiddleware.authUser, interviewController.getInterviewReportByIdController)
+interviewRouter.get("/report/:interviewId", validate({ params: interviewIdParams }), interviewController.getInterviewReportByIdController)
 
 
 /**
@@ -27,15 +28,29 @@ interviewRouter.get("/report/:interviewId", authMiddleware.authUser, interviewCo
  * @description get all interview reports of logged in user.
  * @access private
  */
-interviewRouter.get("/", authMiddleware.authUser, interviewController.getAllInterviewReportsController)
+interviewRouter.get("/", validate({ query: paginationQuery }), interviewController.getAllInterviewReportsController)
 
 
 /**
- * @route GET /api/interview/resume/pdf
- * @description generate resume pdf on the basis of user self description, resume content and job description.
+ * @route POST /api/interview/resume/pdf/:interviewReportId
+ * @description enqueue resume pdf generation job.
  * @access private
  */
-interviewRouter.post("/resume/pdf/:interviewReportId", authMiddleware.authUser, interviewController.generateResumePdfController)
+interviewRouter.post("/resume/pdf/:interviewReportId", validate({ params: resumePdfParams }), interviewController.enqueueResumePdfController)
+
+/**
+ * @route GET /api/interview/resume/pdf/status/:jobId
+ * @description get resume pdf job status
+ * @access private
+ */
+interviewRouter.get("/resume/pdf/status/:jobId", validate({ params: resumeJobParams }), interviewController.getResumePdfStatusController)
+
+/**
+ * @route GET /api/interview/resume/pdf/download/:jobId
+ * @description download generated resume pdf
+ * @access private
+ */
+interviewRouter.get("/resume/pdf/download/:jobId", validate({ params: resumeJobParams }), interviewController.downloadResumePdfController)
 
 
 
