@@ -4,7 +4,6 @@ const cors = require("cors")
 const mongoose = require("mongoose")
 const pinoHttp = require("pino-http")
 const helmet = require("helmet")
-const Sentry = require("@sentry/node")
 const { randomUUID } = require("crypto")
 const { getRedisClient } = require("./config/redis")
 const { logger } = require("./utils/logger")
@@ -13,13 +12,6 @@ const { setupBullBoard } = require("./realtime/bullboard")
 
 const app = express()
 
-if (process.env.SENTRY_DSN) {
-    Sentry.init({
-        dsn: process.env.SENTRY_DSN,
-        environment: process.env.NODE_ENV || "development",
-        tracesSampleRate: Number(process.env.SENTRY_TRACES_SAMPLE_RATE || 0.1)
-    })
-}
 
 app.set("trust proxy", 1)
 app.use(helmet())
@@ -97,9 +89,6 @@ app.get("/ready", (req, res) => {
     })
 })
 
-if (process.env.SENTRY_DSN && typeof Sentry.expressErrorHandler === "function") {
-    app.use(Sentry.expressErrorHandler())
-}
 
 app.use((err, req, res, next) => {
     let status = err?.statusCode || err?.status || 500
