@@ -69,7 +69,7 @@ const useSpeechToText = (options = {}) => {
                 return
             }
             if (event.error === "no-speech") {
-                setError("No speech detected. Keep speaking — listening will continue.")
+                setError("No speech detected. Keep speaking - listening will continue.")
                 if (shouldListenRef.current) {
                     clearTimeout(restartTimeoutRef.current)
                     restartTimeoutRef.current = setTimeout(() => {
