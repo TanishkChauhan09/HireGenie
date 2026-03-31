@@ -19,7 +19,6 @@ if (process.env.SENTRY_DSN) {
         environment: process.env.NODE_ENV || "development",
         tracesSampleRate: Number(process.env.SENTRY_TRACES_SAMPLE_RATE || 0.1)
     })
-    app.use(Sentry.Handlers.requestHandler())
 }
 
 app.set("trust proxy", 1)
@@ -98,8 +97,8 @@ app.get("/ready", (req, res) => {
     })
 })
 
-if (process.env.SENTRY_DSN) {
-    app.use(Sentry.Handlers.errorHandler())
+if (process.env.SENTRY_DSN && typeof Sentry.expressErrorHandler === "function") {
+    app.use(Sentry.expressErrorHandler())
 }
 
 app.use((err, req, res, next) => {
