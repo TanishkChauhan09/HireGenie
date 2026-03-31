@@ -4,7 +4,7 @@ import Register from "./features/auth/pages/Register";
 import Protected from "./features/auth/components/Protected";
 import Home from "./features/interview/pages/Home";
 import Generate from "./features/interview/pages/Generate";
-import Interview from "./features/interview/pages/Interview";
+import Interview from "./features/interview/pages/interview";
 import MockInterview from "./features/interview/pages/MockInterview";
 
 
