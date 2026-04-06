@@ -15,13 +15,7 @@ const setupBullBoard = (app) => {
         }
     })
 
-    app.use("/admin/queue", (req, res, next) => {
-        const token = process.env.QUEUE_DASHBOARD_TOKEN
-        if (token && req.headers["x-dashboard-token"] !== token) {
-            return res.status(401).json({ message: "Unauthorized" })
-        }
-        return next()
-    }, serverAdapter.getRouter())
+    app.use("/admin/queue", serverAdapter.getRouter())
 
     return { serverAdapter, addQueue, removeQueue, setQueues, replaceQueues }
 }
