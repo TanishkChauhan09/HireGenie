@@ -8,6 +8,37 @@ const api = axios.create({
     timeout: 15000
 })
 
+const TOKEN_KEY = "hiregenie_token"
+
+const setAuthHeader = (token) => {
+    if (token) {
+        api.defaults.headers.common.Authorization = `Bearer ${token}`
+    } else {
+        delete api.defaults.headers.common.Authorization
+    }
+}
+
+export const getStoredToken = () => {
+    return localStorage.getItem(TOKEN_KEY)
+}
+
+export const storeToken = (token) => {
+    if (token) {
+        localStorage.setItem(TOKEN_KEY, token)
+        setAuthHeader(token)
+    }
+}
+
+export const clearStoredToken = () => {
+    localStorage.removeItem(TOKEN_KEY)
+    setAuthHeader(null)
+}
+
+const bootToken = getStoredToken()
+if (bootToken) {
+    setAuthHeader(bootToken)
+}
+
 const formatError = (err, fallback) => {
     const data = err?.response?.data
     if (Array.isArray(data?.errors) && data.errors.length > 0) {
@@ -23,6 +54,9 @@ export async function register({ username, email, password }) {
             username, email, password
         })
 
+        if (response?.data?.token) {
+            storeToken(response.data.token)
+        }
         return { data: response.data }
 
     } catch (err) {
@@ -40,6 +74,9 @@ export async function login({ email, password }) {
             email, password
         })
 
+        if (response?.data?.token) {
+            storeToken(response.data.token)
+        }
         return { data: response.data }
 
     } catch (err) {
@@ -54,6 +91,7 @@ export async function logout() {
 
         const response = await api.get("/api/auth/logout")
 
+        clearStoredToken()
         return { data: response.data }
 
     } catch (err) {

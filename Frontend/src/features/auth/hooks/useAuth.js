@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../auth.context";
-import { login, register, logout, getMe } from "../services/auth.api";
+import { login, register, logout, getMe, clearStoredToken } from "../services/auth.api";
 
 
 
@@ -43,6 +43,10 @@ export const useAuth = () => {
         try {
             const result = await logout()
             if (!result?.error) {
+                setUser(null)
+            }
+            if (result?.error) {
+                clearStoredToken()
                 setUser(null)
             }
         } finally {
