@@ -8,6 +8,7 @@ const { closeRedisClient } = require("./src/config/redis")
 const { logger } = require("./src/utils/logger")
 const { initSocket } = require("./src/realtime/socket")
 const { initQueueEvents } = require("./src/realtime/queueEvents")
+let workerStarted = false
 
 const PORT = Number(process.env.PORT || 3000)
 let server
@@ -17,12 +18,16 @@ let queueEvents
 const startServer = async () => {
     try {
         await connectToDB()
+        if (process.env.RUN_WORKER !== "false") {
+            require("./src/workers/interviewWorker")
+            workerStarted = true
+        }
         server = http.createServer(app)
         io = initSocket(server)
         queueEvents = initQueueEvents(io)
 
         server.listen(PORT, () => {
-            logger.info({ port: PORT }, "Server started")
+            logger.info({ port: PORT, worker: workerStarted }, "Server started")
         })
     } catch (err) {
         logger.error({ err }, "Failed to start server")

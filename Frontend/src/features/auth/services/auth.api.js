@@ -1,9 +1,11 @@
 import axios from "axios"
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"
 
 const api = axios.create({
-    baseURL: "http://localhost:3000",
-    withCredentials: true
+    baseURL: API_URL,
+    withCredentials: true,
+    timeout: 15000
 })
 
 const formatError = (err, fallback) => {
@@ -73,4 +75,24 @@ export async function getMe() {
         return { error: message, status: err?.response?.status }
     }
 
+}
+
+export async function requestPasswordReset({ email }) {
+    try {
+        const response = await api.post("/api/auth/forgot-password", { email })
+        return { data: response.data }
+    } catch (err) {
+        const message = formatError(err, "Failed to request reset.")
+        return { error: message, status: err?.response?.status }
+    }
+}
+
+export async function resetPassword({ token, password }) {
+    try {
+        const response = await api.post("/api/auth/reset-password", { token, password })
+        return { data: response.data }
+    } catch (err) {
+        const message = formatError(err, "Failed to reset password.")
+        return { error: message, status: err?.response?.status }
+    }
 }

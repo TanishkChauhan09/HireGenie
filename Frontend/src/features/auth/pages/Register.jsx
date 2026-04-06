@@ -32,7 +32,17 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setError("")
-        const result = await handleRegister({username,email,password})
+        const form = e.currentTarget
+        const formData = new FormData(form)
+        const formUsername = (formData.get("username") || "").toString().trim()
+        const formEmail = (formData.get("email") || "").toString().trim()
+        const formPassword = (formData.get("password") || "").toString()
+
+        const result = await handleRegister({
+            username: formUsername,
+            email: formEmail,
+            password: formPassword
+        })
         if (!result?.ok) {
             setError(result?.error || "Registration failed")
             return
@@ -77,19 +87,37 @@ const Register = () => {
                         <label htmlFor="username">Username</label>
                         <input
                             onChange={(e) => { setUsername(e.target.value) }}
-                            type="text" id="username" name='username' placeholder='Enter username' />
+                            type="text"
+                            id="username"
+                            name='username'
+                            value={username}
+                            autoComplete="username"
+                            placeholder='Enter username'
+                            required />
                     </div>
                     <div className="input-group">
                         <label htmlFor="email">Email</label>
                         <input
                             onChange={(e) => { setEmail(e.target.value) }}
-                            type="email" id="email" name='email' placeholder='Enter email address' />
+                            type="email"
+                            id="email"
+                            name='email'
+                            value={email}
+                            autoComplete="email"
+                            placeholder='Enter email address'
+                            required />
                     </div>
                     <div className="input-group">
                         <label htmlFor="password">Password</label>
                         <input
                             onChange={(e) => { setPassword(e.target.value) }}
-                            type="password" id="password" name='password' placeholder='Enter password' />
+                            type="password"
+                            id="password"
+                            name='password'
+                            value={password}
+                            autoComplete="new-password"
+                            placeholder='Enter password'
+                            required />
                     </div>
 
                     {error && (

@@ -2,14 +2,15 @@ const { generateMockQuestion, evaluateMockAnswer } = require("../services/ai.ser
 const { generateKey, getCache, setCache, getUserCacheVersion } = require("../utils/cache")
 const { interviewQueue } = require("../queue/interviewQueue")
 const { recordQueueEnqueued } = require("../utils/metrics")
-const OpenAI = require("openai")
 const fs = require("fs")
 const os = require("os")
 const path = require("path")
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-})
+const getOpenAIClient = () => {
+    if (!process.env.OPENAI_API_KEY) return null
+    const OpenAI = require("openai")
+    return new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+}
 
 const JOB_OWNER_TTL = 24 * 60 * 60
 
@@ -106,6 +107,12 @@ async function getJobStatus(req, res) {
 async function speechToText(req, res) {
     let tempPath
     try {
+        const openai = getOpenAIClient()
+        if (!openai) {
+            return res.status(501).json({
+                message: "Speech-to-text is disabled. Configure OPENAI_API_KEY to enable it."
+            })
+        }
         if (!req.file) {
             return res.status(400).json({ message: "No audio received." })
         }

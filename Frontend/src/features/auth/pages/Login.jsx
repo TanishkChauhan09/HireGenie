@@ -31,7 +31,15 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setError("")
-        const result = await handleLogin({email,password})
+        const form = e.currentTarget
+        const formData = new FormData(form)
+        const formEmail = (formData.get("email") || "").toString().trim()
+        const formPassword = (formData.get("password") || "").toString()
+
+        const result = await handleLogin({
+            email: formEmail,
+            password: formPassword
+        })
         if (!result?.ok) {
             const msg = result?.error || "Login failed! please register"
             if (msg.toLowerCase().includes("invalid email") || msg.toLowerCase().includes("invalid") ) {
@@ -81,13 +89,25 @@ const Login = () => {
                         <label htmlFor="email">Email</label>
                         <input
                             onChange={(e) => { setEmail(e.target.value) }}
-                            type="email" id="email" name='email' placeholder='Enter email address' />
+                            type="email"
+                            id="email"
+                            name='email'
+                            value={email}
+                            autoComplete="email"
+                            placeholder='Enter email address'
+                            required />
                     </div>
                     <div className="input-group">
                         <label htmlFor="password">Password</label>
                         <input
                             onChange={(e) => { setPassword(e.target.value) }}
-                            type="password" id="password" name='password' placeholder='Enter password' />
+                            type="password"
+                            id="password"
+                            name='password'
+                            value={password}
+                            autoComplete="current-password"
+                            placeholder='Enter password'
+                            required />
                     </div>
 
                     {error && (
@@ -98,7 +118,11 @@ const Login = () => {
 
                     <button className='button primary-button' >Login</button>
                 </form>
-                
+
+                <p className='helper-links'>
+                    <Link to="/forgot-password">Forgot password?</Link>
+                </p>
+
                 <p>Don't have an account? <Link to={"/register"} >Register</Link> </p>
             </section>
         </main>
