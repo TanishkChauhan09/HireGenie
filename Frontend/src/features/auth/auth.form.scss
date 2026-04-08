@@ -128,7 +128,10 @@ main {
 .hero-image {
     flex: 1;
     background: radial-gradient(circle at top, rgba(47, 225, 255, 0.25), transparent 60%),
-        url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=80") center/cover;
+        image-set(
+            url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=700&q=70") 1x,
+            url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=75") 2x
+        ) center/cover;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -294,6 +297,16 @@ a {
         position: static;
         margin-bottom: 1rem;
     }
+
+    .auth-hero {
+        margin-top: 1.5rem;
+    }
+
+    .auth-form {
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 @media (max-width: 640px) {
@@ -303,5 +316,66 @@ a {
 
     .hero-overlay h1 {
         font-size: 1.5rem;
+    }
+
+    .auth-brand {
+        font-size: 2rem;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .home-floating {
+        position: static;
+        margin-bottom: 1rem;
+        align-self: flex-start;
+    }
+
+    .auth-hero {
+        min-height: auto;
+    }
+
+    .hero-image {
+        min-height: 240px;
+    }
+
+    .hero-overlay {
+        padding: 1.5rem;
+        text-align: left;
+    }
+
+    .auth-form {
+        width: 100%;
+        max-width: none;
+        margin-top: 1.25rem;
+        padding: 1.25rem;
+        border-radius: 18px;
+    }
+
+    .input-group input {
+        padding-block: 0.7rem;
+        font-size: 0.95rem;
+    }
+
+    .auth-form h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    main {
+        padding: 1.25rem 1.1rem 2.5rem;
+        gap: 1.25rem;
+    }
+
+    .hero-overlay h1 {
+        font-size: 1.35rem;
+    }
+
+    .hero-overlay p {
+        font-size: 1rem;
+    }
+
+    .auth-form {
+        padding: 1.1rem;
     }
 }

@@ -324,4 +324,70 @@
         flex-direction: column;
         align-items: flex-start;
     }
+
+    .mock-shell {
+        padding: 1.5rem 1.5rem 3rem;
+    }
+
+    .home-floating {
+        position: static;
+        margin-bottom: 1rem;
+    }
+
+    .mock-brand {
+        position: static;
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
+    }
+
+    .mock-card {
+        margin-top: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .question-actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .primary-cta,
+    .ghost-btn {
+        width: 100%;
+        text-align: center;
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .answer-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .mock-answer textarea {
+        min-height: 140px;
+    }
+}
+
+@media (max-width: 520px) {
+    .mock-card {
+        padding: 1.25rem;
+    }
+
+    .mock-question {
+        padding: 1rem;
+    }
+
+    .question-label {
+        font-size: 0.65rem;
+    }
+
+    .mock-answer textarea {
+        min-height: 120px;
+    }
 }

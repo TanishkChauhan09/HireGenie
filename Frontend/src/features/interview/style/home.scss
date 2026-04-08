@@ -273,7 +273,10 @@ body {
     flex: 1;
     min-height: 340px;
     background: radial-gradient(circle at top, rgba(47, 225, 255, 0.25), transparent 60%),
-        url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80") center/cover;
+        image-set(
+            url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=700&q=70") 1x,
+            url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=75") 2x
+        ) center/cover;
     display: flex;
     align-items: flex-end;
     border-radius: 20px;
@@ -613,6 +616,35 @@ body {
     .hero-card {
         min-height: auto;
     }
+
+    .landing-nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .brand {
+        font-size: 2.4rem;
+    }
+
+    .nav-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .nav-ghost,
+    .nav-solid {
+        min-width: 160px;
+    }
+
+    .generate-nav-left {
+        width: 100%;
+    }
+
+    .generate-auth-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
 }
 
 @media (max-width: 640px) {
@@ -626,5 +658,97 @@ body {
 
     .hero-stats {
         grid-template-columns: 1fr;
+    }
+
+    .landing-nav {
+        gap: 0.75rem;
+    }
+
+    .home-pill {
+        margin-right: 0;
+    }
+
+    .brand {
+        font-size: 2rem;
+    }
+
+    .nav-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nav-ghost,
+    .nav-solid {
+        width: 100%;
+        min-width: 0;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .generate-auth-actions,
+    .logout-anchor {
+        width: 100%;
+    }
+
+    .generate-auth-actions .nav-solid,
+    .logout-btn {
+        width: 100%;
+    }
+
+    .register-card {
+        padding: 1.5rem;
+    }
+
+    .hero-image {
+        min-height: 220px;
+        background-position: center top;
+    }
+
+    .hero-card {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .hero-overlay {
+        padding: 1.1rem;
+    }
+
+    .primary-cta {
+        width: 100%;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand {
+        font-size: 1.6rem;
+    }
+
+    .home-pill {
+        font-size: 0.9rem;
+        padding: 0.55rem 1.1rem;
+    }
+
+    .nav-ghost,
+    .nav-solid {
+        font-size: 0.85rem;
+        padding: 0.45rem 0.9rem;
+    }
+
+    .hero-image {
+        min-height: 180px;
+        background-position: center top;
+    }
+
+    .hero-overlay h1 {
+        font-size: 1.3rem;
+    }
+
+    .hero-rotating {
+        font-size: 0.9rem;
+    }
+
+    .register-card {
+        padding: 1.2rem;
     }
 }
