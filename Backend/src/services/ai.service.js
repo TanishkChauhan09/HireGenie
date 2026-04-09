@@ -99,6 +99,45 @@ const buildFallbackReport = (jobDescription) => ({
     preparationPlan: FALLBACK_PREP
 })
 
+const MODEL_FALLBACKS = [
+    "gemini-2.0-flash",
+    "gemini-1.5-flash-latest",
+    "gemini-1.5-pro-latest",
+    "gemini-1.0-pro"
+]
+
+const buildModelList = () => {
+    const envModel = process.env.GEMINI_MODEL
+    const models = envModel ? [ envModel, ...MODEL_FALLBACKS ] : [ ...MODEL_FALLBACKS ]
+    return Array.from(new Set(models.filter(Boolean)))
+}
+
+const isModelNotFound = (err) => {
+    const msg = err?.message || ""
+    return msg.includes("models/") && msg.includes("not found")
+}
+
+const generateContentWithFallback = async ({ contents, config }) => {
+    const models = buildModelList()
+    let lastErr
+    for (const model of models) {
+        try {
+            return await ai.models.generateContent({
+                model,
+                contents,
+                config
+            })
+        } catch (err) {
+            lastErr = err
+            if (isModelNotFound(err)) {
+                continue
+            }
+            throw err
+        }
+    }
+    throw lastErr || new Error("No available Gemini models found.")
+}
+
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
 
     const prompt = `Generate a complete interview report for a candidate.
@@ -168,15 +207,12 @@ Job Description: ${jobDescription}
         }
     }
 
-    const modelName = process.env.GEMINI_MODEL || "gemini-1.5-flash"
-
     const attemptGenerate = async (strictMode) => {
         const effectivePrompt = strictMode
             ? `${prompt}\nIMPORTANT: All arrays must have at least 5 items and each item must be an object with the specified fields.`
             : prompt
 
-        response = await ai.models.generateContent({
-            model: modelName,
+        response = await generateContentWithFallback({
             contents: effectivePrompt,
             config: {
                 responseMimeType: "application/json",
@@ -259,8 +295,7 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
 
     let response
     try {
-        response = await ai.models.generateContent({
-            model: process.env.GEMINI_MODEL || "gemini-1.5-flash",
+        response = await generateContentWithFallback({
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
@@ -315,8 +350,7 @@ Job description: ${jobDescription || "General software engineering"}
 Return JSON: {"question": "..."}`
 
     try {
-        const response = await ai.models.generateContent({
-            model: process.env.GEMINI_MODEL || "gemini-1.5-flash",
+        const response = await generateContentWithFallback({
             contents: prompt,
             config: { responseMimeType: "application/json" }
         })
@@ -355,8 +389,7 @@ Return JSON with fields:
 `
 
     try {
-        const response = await ai.models.generateContent({
-            model: process.env.GEMINI_MODEL || "gemini-1.5-flash",
+        const response = await generateContentWithFallback({
             contents: prompt,
             config: { responseMimeType: "application/json" }
         })
