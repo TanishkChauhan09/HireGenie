@@ -1,4 +1,5 @@
 const rateLimit = require("express-rate-limit")
+const { ipKeyGenerator } = require("express-rate-limit")
 const { RedisStore } = require("rate-limit-redis")
 const { getRedisClient } = require("../config/redis")
 
@@ -11,7 +12,7 @@ const rateLimiter = rateLimit({
     legacyHeaders: false,
     keyGenerator: (req) => {
         if (req.user?.id) return `user:${req.user.id}`
-        return req.ip
+        return ipKeyGenerator(req)
     },
     ...(redis
         ? {
