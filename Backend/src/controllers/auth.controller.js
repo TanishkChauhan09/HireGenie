@@ -311,6 +311,32 @@ async function resetPasswordController(req, res) {
     }
 }
 
+/**
+ * @name geminiDebugController
+ * @description sanity check Gemini API availability
+ * @access private (dev only)
+ */
+async function geminiDebugController(req, res) {
+    try {
+        const { GoogleGenAI } = require("@google/genai")
+        const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_GENAI_API_KEY })
+        const model = process.env.GEMINI_MODEL || "gemini-2.0-flash"
+        const response = await ai.models.generateContent({
+            model,
+            contents: "ping",
+        })
+        return res.status(200).json({
+            ok: true,
+            model,
+            text: response?.text || "",
+        })
+    } catch (err) {
+        return res.status(500).json({
+            ok: false,
+            error: err?.message || "Gemini error",
+        })
+    }
+}
 
 module.exports = {
     registerUserController,
@@ -318,5 +344,6 @@ module.exports = {
     logoutUserController,
     getMeController,
     requestPasswordResetController,
-    resetPasswordController
+    resetPasswordController,
+    geminiDebugController
 }

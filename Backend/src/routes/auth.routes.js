@@ -34,6 +34,7 @@ authRouter.post("/forgot-password", validate({ body: forgotPasswordBody }), auth
  * @access Public
  */
 authRouter.post("/reset-password", validate({ body: resetPasswordBody }), authController.resetPasswordController)
+authRouter.get("/debug/gemini", authMiddleware.authUser, authController.geminiDebugController)
 
 /**
  * @route GET /api/auth/logout
