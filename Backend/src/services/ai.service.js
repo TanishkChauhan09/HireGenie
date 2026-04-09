@@ -168,13 +168,15 @@ Job Description: ${jobDescription}
         }
     }
 
+    const modelName = process.env.GEMINI_MODEL || "gemini-1.5-flash"
+
     const attemptGenerate = async (strictMode) => {
         const effectivePrompt = strictMode
             ? `${prompt}\nIMPORTANT: All arrays must have at least 5 items and each item must be an object with the specified fields.`
             : prompt
 
         response = await ai.models.generateContent({
-            model: "gemini-3-flash-preview",
+            model: modelName,
             contents: effectivePrompt,
             config: {
                 responseMimeType: "application/json",
@@ -258,7 +260,7 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
     let response
     try {
         response = await ai.models.generateContent({
-            model: "gemini-3-flash-preview",
+            model: process.env.GEMINI_MODEL || "gemini-1.5-flash",
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
@@ -314,7 +316,7 @@ Return JSON: {"question": "..."}`
 
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-3-flash-preview",
+            model: process.env.GEMINI_MODEL || "gemini-1.5-flash",
             contents: prompt,
             config: { responseMimeType: "application/json" }
         })
@@ -354,7 +356,7 @@ Return JSON with fields:
 
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-3-flash-preview",
+            model: process.env.GEMINI_MODEL || "gemini-1.5-flash",
             contents: prompt,
             config: { responseMimeType: "application/json" }
         })
